@@ -12,8 +12,14 @@ public abstract class Implementor {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public Implementor(String params) {
-		// TODO Auto-generated constructor stub
+	/**
+	 * build the im
+	 * 
+	 * @param params - json string that contain parameters for this key Store 
+	 * @throws Exception 
+	 */
+	public Implementor(String params) throws Exception {
+		throw new Exception("unimplement"); 
 	}
 	
 	
@@ -25,12 +31,12 @@ public abstract class Implementor {
 		this.name = name;
 	}
 
-	public abstract Certificate genrateKeyPair(String dName); 
+	public abstract Certificate genrateKeyPair(String dName) throws ImplementorExcption; 
 	
-	public abstract SecretKey   genrateSecertKey(); 
+	public abstract SecretKey   genrateSecertKey(String alg) throws ImplementorExcption; 
 	
-	public abstract boolean		installSecertKey(SecretKey key); 
+	public abstract boolean		installSecertKey(SecretKey key) throws ImplementorExcption ; 
 	
-	public abstract boolean		installTrustCert(Certificate cert) ;	
+	public abstract boolean		installTrustCert(Certificate cert) throws ImplementorExcption ;	
 		
 }
