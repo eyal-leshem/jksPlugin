@@ -71,13 +71,10 @@ public class JksImplemntor extends Implementor {
 	
 
 	@Override
-	public Certificate genrateKeyPair(String dName) throws ImplementorExcption{
+	public Certificate genrateKeyPair(String dName,String alias) throws ImplementorExcption{
 		try{
-			String alias=getNextAlias(); 
-			//get unuse alias 		
-			while(myKeyTool.containAlias(alias)){
-				alias=getNextAlias(); 
-			}
+			
+			
 			//genrate cert 
 			Certificate cert=myKeyTool.genartePrivatekey(alias, dName);
 			return cert;

@@ -73,31 +73,6 @@ public class MyKeyTool {
 		
 		
 	}
-	
-	/**
-	 *  check if the keystore contain the alias 
-	 * @param alias
-	 * @return
-	 * @throws MyKeyToolException
-	 * @throws MykeyToolIoException
-	 * @throws KeyStoreException 
-	 */
-	public boolean containAlias(String alias) throws MyKeyToolException, MykeyToolIoException{
-		
-		boolean isContain;
-		KeyStore ks=loadKeyStore();
-		
-		try {
-			 isContain=ks.containsAlias(alias);
-		} catch (KeyStoreException e) {
-			throw new MyKeyToolException("some problem with key store", e); 
-		} 
-		
-		return isContain; 
-		
-	}
-	
-	
 	/**
 	 * add new certificate to the keystore 
 	 * @param cert
@@ -118,33 +93,27 @@ public class MyKeyTool {
 	
 	}
 	
-	public void createNewKs() throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, MykeyToolIoException, MyKeyToolException {
-		  KeyStore ks = KeyStore.getInstance(conf.getKeyStoreType());
-		  ks.load(null, conf.getKsPassword().toCharArray());
-		  storeKeyStore(ks); 
+	public void createNewKs() throws MyKeyToolException, MykeyToolIoException {
+		//get instance of keystore object
+		KeyStore ks;
+		try {
+			ks = KeyStore.getInstance(conf.getKeyStoreType());
+		} catch (KeyStoreException e) {
+			throw new MyKeyToolException("can't create keystore of type"+ conf.getKeyStoreType(), e);
+		}
+		
+		//load new  key store 
+		try {
+			ks.load(null, conf.getKsPassword().toCharArray());
+		} catch (Exception e){
+			throw new MyKeyToolException("can't create new keystore", e); 
+		}
+		
+		//store the new keystore to file 		
+		storeKeyStore(ks);
+		 
 		  
 	 }
-	
-	/**
-	 * add a secret		key to the keystore
-	 * @param key 		key too add
-	 * @param alias		alias to save in keystore 
-	 * @throws MyKeyToolException
-	 * @throws MykeyToolIoException
-	 */
-	public void addSecretKey(SecretKey key,String alias) throws MyKeyToolException, MykeyToolIoException{
-		KeyStore ks=loadKeyStore();
-		try {
-			ks.setKeyEntry(alias, key.getEncoded(), null);
-		} catch (KeyStoreException e) {
-			throw new MyKeyToolException("cann't save the secret key in keystore, does the keystore support private keys?",e);
-		}
-		storeKeyStore(ks);
-		
-		
-		
-	}
-	
 	/**
 	 * create new secret key and save him into the keystore 
 	 * @param alias
@@ -158,16 +127,19 @@ public class MyKeyTool {
 		} catch (NoSuchAlgorithmException e) {
 			throw new MyKeyToolException("cann't ganerate private key",e);
 		} 
+		
 		SecretKey 	 key=keyGen.generateKey();
 		KeyStore 	 ks=loadKeyStore(); 
+		
 		try {
 			ks.setKeyEntry(alias, key.getEncoded(), null);
 		} catch (KeyStoreException e) {
 			throw new MyKeyToolException("cann't save the secret key in keystore, does the keystore support private keys?",e);
 		}
+		
 		storeKeyStore(ks); 
 							
-		return key;
+		return null;
 	}
 	/**
 	 * install replay from the ca in out keystore 
@@ -258,7 +230,8 @@ public class MyKeyTool {
 		  PKCS10 request = new PKCS10(cert.getPublicKey()); 
 		  Signature signature = null;
 		  try{
-		  	signature.initSign((PrivateKey) key);
+			signature = Signature.getInstance(conf.getSigAlg());
+			signature.initSign((PrivateKey) key);
 		  }
 		  catch (Exception e) {
 			  throw new MyKeyToolException("problem to sign the csr ",e); 
@@ -272,7 +245,7 @@ public class MyKeyTool {
 		  } 
 		  
 		  try {
-			request.encodeAndSign(subject,signature);
+			request.encodeAndSign(new X500Signer(signature,subject));
 		  } catch (Exception e){
 			  throw new MyKeyToolException("problem to sign the csr ",e); 
 		}

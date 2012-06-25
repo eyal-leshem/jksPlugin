@@ -1,6 +1,7 @@
 package Implemtor;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.cert.Certificate;
 
 import javax.crypto.SecretKey;
@@ -31,12 +32,28 @@ public abstract class Implementor {
 		this.name = name;
 	}
 
-	public abstract Certificate genrateKeyPair(String dName) throws ImplementorExcption; 
+	public Certificate	genrateKeyPair(String dName,String alias) throws ImplementorExcption{
+		throw new ImplementorExcption("unimplemnt method"); 
+	}
 	
-	public abstract SecretKey   genrateSecertKey(String alg) throws ImplementorExcption; 
+	public SecretKey	genrateSecertKey(String alg,String alias) throws ImplementorExcption{
+		throw new ImplementorExcption("unimplemnt method"); 
+	} 
 	
-	public abstract boolean		installSecertKey(SecretKey key) throws ImplementorExcption ; 
+	public  boolean		installSecertKey(SecretKey key, String alias) throws ImplementorExcption {
+		throw new ImplementorExcption("unimplemnt method"); 
+	} 
 	
-	public abstract boolean		installTrustCert(Certificate cert) throws ImplementorExcption ;	
+	public boolean		installTrustCert(Certificate cert ,String alias) throws ImplementorExcption {
+		throw new ImplementorExcption("unimplemnt method"); 
+	}
+	
+	public boolean		addToCrl(BigInteger serialNumber)  throws ImplementorExcption{
+		throw new ImplementorExcption("unimplemnt method"); 
+	}
+	
+	public boolean		removeCertificate(BigInteger serialNumber)  throws ImplementorExcption{
+		throw new ImplementorExcption("unimplemnt metho"); 
+	}
 		
 }
