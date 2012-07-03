@@ -39,6 +39,7 @@ import javax.security.auth.x500.X500Principal;
 
 
 import com.sun.crypto.provider.AESKeyGenerator;
+import com.sun.org.apache.bcel.internal.generic.ALOAD;
 
 import sun.security.pkcs.PKCS10;
 
@@ -303,6 +304,9 @@ public class MyKeyTool {
 			  throw new MyKeyToolException("problem add the certificate to the key store",e);
 		  }
 		  storeKeyStore(ks);
+		  
+		  
+		  
 		  return chain[0]; 
 		  
 		  
@@ -524,6 +528,67 @@ public class MyKeyTool {
         
 	
 		
+	}
+
+
+
+	public void addSecretKey(SecretKey key, String alias)  throws MyKeyToolException, MykeyToolIoException {
+		
+		
+		KeyStore ks=loadKeyStore();
+		
+		try {
+			ks.setKeyEntry(alias, key.getEncoded(), null);
+		} catch (KeyStoreException e) {
+			throw new MyKeyToolException("can't add the certificate \""+alias+"\" to ks",e); 
+		} 
+	
+		
+		
+	}
+	
+	/**
+	 * delelte all X509 certificate with that serial number from the keystore  
+	 * 
+	 * @param serial -number to delete from keystore  
+	 * @return
+	 * @throws MyKeyToolException
+	 * @throws MykeyToolIoException
+	 */
+	 public boolean deleteFromks(BigInteger serial) throws MyKeyToolException, MykeyToolIoException{
+		
+		KeyStore ks=loadKeyStore();
+		
+		//get all aliases 
+		Enumeration<String> aliases;
+	 	try {
+	 		aliases= ks.aliases();
+		} catch (KeyStoreException e) {
+			throw new MyKeyToolException("can't get alias from ks"+ this.conf.getKsPath(),e); 
+		} 
+	 	
+	 
+	 	while(aliases.hasMoreElements()){
+	 		
+	 		String alias=aliases.nextElement();
+	 		X509Certificate cert=null;
+	 		
+	 		try{
+	 			cert=(X509Certificate)ks.getCertificate(alias);
+	 		}catch (Exception ignore){}//not x509 entry  
+	 		
+	 		if(cert!=null && cert.getSerialNumber().equals(serial)){
+	 			try {
+					ks.deleteEntry(alias);
+				} catch (KeyStoreException e) {
+					throw new MyKeyToolException("can't delete this certifcate" ,e);
+				}
+	 		} 		
+	 	}
+	 	
+	 	storeKeyStore(ks);
+			 		
+	 	return true; 
 	}
     
 }

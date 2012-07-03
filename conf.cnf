@@ -1,3 +1,9 @@
-keyStroePath:"my.keyStore"
-keySrorePassword:"a10097"
-keystoreType:"jks" 
+{
+	"ksPassword" : "a10097", 
+	"ksPath" : "C:/temp/keyStore/my.keyStore", 
+	"ksType" : "JCEKS", 
+	"tsPassword" : "a10097", 
+	"tsPath" : "C:/temp/keyStore/my.keyStore", 
+	"tsType" : "JCEKS",	
+	"name" : "tomcat"	
+}
