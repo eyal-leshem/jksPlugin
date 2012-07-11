@@ -18,9 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Principal;
 import java.security.PrivateKey;
-import java.security.Provider;
 import java.security.PublicKey;
-import java.security.Security;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
@@ -28,7 +26,6 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
@@ -129,7 +126,7 @@ public class MyKeyTool {
 		try {
 			keyGen = KeyGenerator.getInstance(alg);
 		} catch (NoSuchAlgorithmException e) {
-			throw new MyKeyToolException("can't generate private key",e);
+			throw new MyKeyToolException("cann't ganerate private key",e);
 		} 
 		
 		SecretKey 	 key=keyGen.generateKey();
@@ -138,7 +135,7 @@ public class MyKeyTool {
 		try {
 			ks.setKeyEntry(alias, key.getEncoded(), null);
 		} catch (KeyStoreException e) {
-			throw new MyKeyToolException("can't save the secret key in keystore, does the keystore support private keys?",e);
+			throw new MyKeyToolException("cann't save the secret key in keystore, does the keystore support private keys?",e);
 		}
 		
 		storeKeyStore(ks); 
@@ -594,23 +591,4 @@ public class MyKeyTool {
 	 	return true; 
 	}
     
-	 
-	 public ArrayList<String> getAlgorithms()
-	 {
-		 
-		 ArrayList<String> algorithms = new ArrayList<String>();
-		 
-		 for (Provider provider : Security.getProviders())
-		 {
-		   //System.out.println("Provider: " + provider.getName());
-		   
-		   for (Provider.Service service : provider.getServices())
-		   {
-			   //System.out.println("  Algorithm: " + service.getAlgorithm());
-			   
-			   algorithms.add(service.getAlgorithm());
-		   } 
-		 }
-		 return algorithms;
-	 }
 }

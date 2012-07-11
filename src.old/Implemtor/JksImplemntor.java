@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.math.BigInteger;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 
 import javax.crypto.SecretKey;
 
@@ -176,14 +175,6 @@ public class JksImplemntor extends Implementor {
 		
 		return true; 
 	}
-	
-	@Override
-	public ArrayList<String> getAlgorithms()
-	{
-		return ksKeyTool.getAlgorithms();
-	}
-	
-	
 
 	public static void main(String[] argv) throws Exception{
 		
