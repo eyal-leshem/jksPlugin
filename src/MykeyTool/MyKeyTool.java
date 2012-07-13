@@ -143,7 +143,7 @@ public class MyKeyTool {
 		
 		storeKeyStore(ks); 
 							
-		return null;
+		return key;
 	}
 	/**
 	 * install replay from the ca in out keystore 
@@ -606,9 +606,17 @@ public class MyKeyTool {
 		   
 		   for (Provider.Service service : provider.getServices())
 		   {
-			   //System.out.println("  Algorithm: " + service.getAlgorithm());
 			   
-			   algorithms.add(service.getAlgorithm());
+			 
+			   
+			
+			   if(service.getType().equals("Cipher") && !algorithms.contains(service.getAlgorithm())){
+				   System.out.println("  Algorithm: " + service.getAlgorithm());
+				   System.out.println("  type: " + service.getType()); 
+				   algorithms.add(service.getAlgorithm());  
+			   }
+			   
+			   
 		   } 
 		 }
 		 return algorithms;

@@ -194,6 +194,8 @@ public class JksImplemntor extends Implementor {
 		String jsonConf=new String(buffer); 
 		
 		Implementor imp=new JksImplemntor(jsonConf);
+		imp.getAlgorithms();
+		imp.genrateSecertKey("AES","3");
 		Certificate cert=imp.genrateKeyPair("CN=a","c"); 
 		//imp.installTrustCert(cert, "b"); 
 		imp.removeCertificate(((X509Certificate)cert).getSerialNumber()); 
