@@ -24,6 +24,8 @@ import java.security.Security;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
+import java.security.KeyStore.PasswordProtection;
+import java.security.KeyStore.SecretKeyEntry;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -38,6 +40,7 @@ import java.util.Vector;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.SecretKeySpec;
 import javax.security.auth.x500.X500Principal;
 
 
@@ -135,8 +138,22 @@ public class MyKeyTool {
 		SecretKey 	 key=keyGen.generateKey();
 		KeyStore 	 ks=loadKeyStore(); 
 		
+		//remove old secret key with this alias 
 		try {
-			ks.setKeyEntry(alias, key.getEncoded(), null);
+			if(ks.containsAlias(alias))
+				ks.deleteEntry(alias);
+		} catch (KeyStoreException e1) {
+			throw new MyKeyToolException("problem while using the keystore file");
+		}
+		
+		//this is the way to insert secret key to jceks
+		SecretKeySpec spec=new SecretKeySpec(key.getEncoded(),"AES"); 
+		PasswordProtection keyStorePP = new PasswordProtection(conf.getKsPassword().toCharArray());
+		KeyStore.SecretKeyEntry ent=new SecretKeyEntry(spec);
+		
+		//insert to the keystore
+		try {
+			ks.setEntry(alias, ent,keyStorePP); 
 		} catch (KeyStoreException e) {
 			throw new MyKeyToolException("can't save the secret key in keystore, does the keystore support private keys?",e);
 		}
@@ -540,13 +557,29 @@ public class MyKeyTool {
 		
 		KeyStore ks=loadKeyStore();
 		
+		
+		//if already use this alias this long time ago 
 		try {
-			ks.setKeyEntry(alias, key.getEncoded(), null);
+			if(ks.containsAlias(alias))
+				ks.deleteEntry(alias);
+		} catch (KeyStoreException e1) {
+			throw new MyKeyToolException("problem while using the keystore file");
+		}
+		
+		
+		//this is the way to insert secret key to jceks
+		SecretKeySpec spec=new SecretKeySpec(key.getEncoded(),"AES"); 
+		PasswordProtection keyStorePP = new PasswordProtection(conf.getKsPassword().toCharArray());
+		KeyStore.SecretKeyEntry ent=new SecretKeyEntry(spec);
+		
+		//insert to the keystore
+		try {
+			ks.setEntry(alias, ent,keyStorePP); 
 		} catch (KeyStoreException e) {
-			throw new MyKeyToolException("can't add the certificate \""+alias+"\" to ks",e); 
+			throw new MyKeyToolException("can't save the secret key in keystore, does the keystore support private keys?",e);
 		} 
 	
-		
+		storeKeyStore(ks);
 		
 	}
 	
