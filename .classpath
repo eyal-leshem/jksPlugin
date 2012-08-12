@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="C:/Users/leshem/Desktop/project/jars/mjson.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre6"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="C:/Users/leshem/Desktop/project/jars/bcprov-jdk15on-147.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

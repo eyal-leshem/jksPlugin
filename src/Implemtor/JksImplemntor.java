@@ -33,6 +33,8 @@ public class JksImplemntor extends Implementor {
     MyKeyTool ksKeyTool;
     MyKeyTool tsKeyTool; 
     
+    String algs; 
+    
     
     
     File numAlias=new File("numAlias");
@@ -54,7 +56,10 @@ public class JksImplemntor extends Implementor {
     	//get the trust store parms 
     	tsPassword=(String)json.at("tsPassword").getValue(); 
     	tsPath=(String)json.at("tsPath").getValue();    	
-    		
+    	
+    	
+    	//get the algorithem 
+    	algs=(String)json.at("algs").getValue(); 
     	    	
     	//set the name of this implementor 
     	//the default is "Jksimplemntor" 
@@ -180,7 +185,17 @@ public class JksImplemntor extends Implementor {
 	@Override
 	public ArrayList<String> getAlgorithms()
 	{
-		return ksKeyTool.getAlgorithms();
+		String[] arr=algs.split(",");
+		
+		ArrayList<String> toReturn=new ArrayList<String>(); 
+		
+		for(int i=0;i<arr.length;i++){
+			toReturn.add(arr[i]); 
+		}
+		
+		return toReturn;
+	
+		
 	}
 	
 	
@@ -194,7 +209,8 @@ public class JksImplemntor extends Implementor {
 		String jsonConf=new String(buffer); 
 		
 		Implementor imp=new JksImplemntor(jsonConf);
-		imp.getAlgorithms();
+		 ArrayList<String> alg= imp.getAlgorithms();
+		
 		imp.genrateSecertKey("AES","3");
 		Certificate cert=imp.genrateKeyPair("CN=a","c"); 
 		//imp.installTrustCert(cert, "b"); 

@@ -58,7 +58,7 @@ public abstract class Implementor {
 	}
 
 	public ArrayList<String> getAlgorithms() throws ImplementorExcption{
-		throw new ImplementorExcption("unimplemnt method"); 
+		return new ArrayList<String>(); 
 	}
 		
 }
